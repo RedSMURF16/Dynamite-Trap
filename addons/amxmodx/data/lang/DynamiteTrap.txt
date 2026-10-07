@@ -1,0 +1,69 @@
+[en] -- RedSMURF
+DYNAMITE_CHAT_TAG                                = ^4[DYNAMITE TRAP]^1
+DYNAMITE_CHAT_LIMIT                              = You've reached the maximum number of Dynamite Traps ^4%d
+DYNAMITE_CHAT_NO_DYNAMITE                        = There are no Dynamite Traps available
+DYNAMITE_CHAT_CREATE_NEW                         = ^3%s ^1created
+DYNAMITE_CHAT_REMOVE_CURRENT                     = ^3%s ^1removed
+DYNAMITE_CHAT_REMOVE_ALL                         = All Dynamite Traps removed
+DYNAMITE_CHAT_SAVE                               = Dynamite Trap data saved in ^4%s
+DYNAMITE_CHAT_SHOW_CURRENT                       = ^3%s ^1is %L
+DYNAMITE_CHAT_SHOW_ALL_SHOWN                     = All Dynamite Traps are now Shown
+DYNAMITE_CHAT_SHOW_ALL_HIDDEN                    = All Dynamite Traps are now Hidden
+DYNAMITE_CHAT_STATUS_CURRENT                     = ^3%s ^1is %L
+DYNAMITE_CHAT_STATUS_ALL_ENABLED                 = All Dynamite Traps are now Enabled
+DYNAMITE_CHAT_STATUS_ALL_DISABLED                = All Dynamite Traps are now Disabled
+
+DYNAMITE_CHAT_SHOWN                              = Shown
+DYNAMITE_CHAT_HIDDEN                             = Hidden
+DYNAMITE_CHAT_ENABLED                            = Enabled
+DYNAMITE_CHAT_DISABLED                           = Disabled
+
+DYNAMITE_NAV_NEXT                                = Next
+DYNAMITE_NAV_BACK                                = Back
+DYNAMITE_ON                                      = \y[ON]
+DYNAMITE_OFF                                     = \r[OFF]
+DYNAMITE_SHOWN                                   = \y[SHOWN]
+DYNAMITE_HIDDEN                                  = \r[HIDDEN]
+DYNAMITE_ENABLED                                 = \y[ENABLED]
+DYNAMITE_DISABLED                                = \r[DISABLED]
+DYNAMITE_ROTATE_PITCH                            = \d[PITCH]
+DYNAMITE_ROTATE_YAW                              = \d[YAW]
+DYNAMITE_ROTATE_ROLL                             = \d[ROLL]
+DYNAMITE_ROTATE_SMALL                            = \d[SMALL]
+DYNAMITE_ROTATE_MEDIUM                           = \d[MEDIUM]
+DYNAMITE_ROTATE_LARGE                            = \d[LARGE]
+
+DYNAMITE_MENU_TITLE                              = \dDynamite Trap - Version \y%s
+DYNAMITE_MENU_TITLE_PAGE                         = \yPage:\r
+DYNAMITE_ROOT_CREATE                             = Create Dynamite Trap
+DYNAMITE_ROOT_EDIT                               = Edit Dynamite Trap
+DYNAMITE_ROOT_REMOVE                             = Remove Dynamite Trap
+DYNAMITE_ROOT_SAVE                               = Save Data
+DYNAMITE_ROOT_SHOW                               = Visibility Settings
+DYNAMITE_ROOT_STATUS                             = Status Settings
+DYNAMITE_ROOT_NOCLIP                             = Status Noclip %L
+DYNAMITE_ROOT_GODMODE                            = Status Godmode %L
+DYNAMITE_ROOT_ROTATE                             = Adjust Rotation
+
+DYNAMITE_EDIT_SHOW                               = Edit Visibility
+DYNAMITE_EDIT_STATUS                             = Edit Status
+
+DYNAMITE_REMOVE_CURRENT                          = Remove Dynamite Trap >> \y%s
+DYNAMITE_REMOVE_ALL                              = Remove all Dynamite Traps
+
+DYNAMITE_SHOW_CURRENT                            = Show Dynamite Trap >> %s%s %L
+DYNAMITE_SHOW_ALL_SHOW                           = Show all Dynamite Traps
+DYNAMITE_SHOW_ALL_HIDE                           = Hide all Dynamite Traps
+
+DYNAMITE_STATUS_CURRENT                          = Enable Dynamite Trap >> %s%s %L
+DYNAMITE_STATUS_ALL_ENABLE                       = Enable all Dynamite Traps
+DYNAMITE_STATUS_ALL_DISABLE                      = Disable all Dynamite Traps
+
+DYNAMITE_ROTATE_UP                               = Turn Up
+DYNAMITE_ROTATE_DOWN                             = Turn Down
+DYNAMITE_ROTATE_GROUND                           = Set on ground >> %L
+DYNAMITE_ROTATE_MODE                             = Rotate Mode >> %L
+DYNAMITE_ROTATE_SIZE                             = Rotate Size >> %L
+DYNAMITE_ROTATE_PLACE                            = Place Dynamite Trigger
+DYNAMITE_ROTATE_ADD                              = Add Dynamite
+DYNAMITE_ROTATE_FINISH                           = Finish Placement
