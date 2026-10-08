@@ -1857,7 +1857,6 @@ stock LoadDataDynamite(iItem, iFlags, Float:fOriginTrigger[3], Float:fAnglesTrig
         dynamiteCreateDynamite(eDynamite)
         ArrayGetArray(aOrigin, i, eDynamite[DYNAMITE_LAST_ORIGIN])
         ArrayGetArray(aAngles, i, eDynamite[DYNAMITE_LAST_ANGLES])
-        eDynamite[DYNAMITE_FLAGS] &= ~FLAG_LOCK
         eDynamite[DYNAMITE_LAST_ANGLES][0] = -eDynamite[DYNAMITE_LAST_ANGLES][0]
 
         ArraySetCell(eDynamite[DYNAMITE_SIZE], i, eDynamite[DYNAMITE_LAST_SIZE])
@@ -1868,6 +1867,7 @@ stock LoadDataDynamite(iItem, iFlags, Float:fOriginTrigger[3], Float:fAnglesTrig
         dynamiteSetSize(eDynamite, ENTITY_DYNAMITE)
     }
 
+    eDynamite[DYNAMITE_FLAGS] &= ~FLAG_LOCK
     dynamiteSetState(eDynamite)
     ArraySetArray(g_aDynamite, iCount, eDynamite)
 }
