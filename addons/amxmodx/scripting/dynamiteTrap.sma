@@ -62,7 +62,6 @@
 #define SOUND_ALERT                 "buttons/bell1.wav"
 
 new const PLUGIN_VERSION[]          = "1.0"
-new const Float:DELAY_ON_CONNECT    = 1.0
 new const Float:DELAY_ON_LOAD       = 1.0
 new const ERROR_FILE[]              = "DynamiteTrap_ERRORS.log"
 
@@ -438,10 +437,6 @@ ReadFile()
 {
     if ( g_bFileWasRead )
     {
-        for ( new id = 1; id <= g_iMaxPlayers; id ++ )
-            if ( is_user_connected(id) )
-                UpdateData(id)
-
         ArrayClear(g_aDynamiteConfig)
         g_iDynamiteConfig = 0
     }
@@ -663,11 +658,6 @@ ReadFile()
     fclose(iFile)
 }
 
-public client_authorized(id)
-{
-    set_task(DELAY_ON_CONNECT, "UpdateData", id)
-}
-
 public client_disconnected(id)
 {
     new eDynamite[DYNAMITE], iItem
@@ -681,11 +671,6 @@ public client_disconnected(id)
     DisableAction(id)
     g_ePlayerData[id][PDATA_DYNAMITE_GHOST]  = 0
     g_ePlayerData[id][PDATA_DYNAMITE_MENU]   = 0
-}
-
-public UpdateData(id)
-{
-    g_ePlayerData[id][PDATA_OFFSET] = g_eSettings[SETTING_OFFSET_BASE]
 }
 
 stock dynamiteInit()
