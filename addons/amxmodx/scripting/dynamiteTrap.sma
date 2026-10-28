@@ -48,6 +48,13 @@
 #endif
 
 #define MAX_ENT                     32
+#define DYNAMITE_CHECK              10.0
+#define DYNAMITE_OFFSET_BASE        120.0
+#define DYNAMITE_OFFSET_MIN         65.0
+#define DYNAMITE_OFFSET_MAX         900.0
+#define DYNAMITE_OFFSET_STEP        10.0
+#define DYNAMITE_GHOST_ALPHA        120
+#define DYNAMITE_ROTATION_STEP      22.5
 #define ADMIN_ACCESS                ADMIN_RCON
 #define PDATA_NEXT_ATTACK           83
 #define XO_CBASEPLAYER              5
@@ -170,13 +177,7 @@ enum _:MAIN_SETTINGS
     Float:SETTING_MAXS_DYNAMITE_LARGE[3],
 
     bool:SETTING_DYNAMITE_LOAD,
-    Float:SETTING_DYNAMITE_CHECK,
     Float:SETTING_DYNAMITE_TASK,
-    Float:SETTING_OFFSET_BASE,
-    Float:SETTING_OFFSET[2],
-    Float:SETTING_OFFSET_STEP,
-    SETTING_GHOST_ALPHA,
-    Float:SETTING_ROTATION_STEP
 }
 
 enum _:DYNAMITE
@@ -596,20 +597,8 @@ ReadFile()
                             parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_MAXS_DYNAMITE_LARGE], charsmax(g_eSettings[SETTING_MAXS_DYNAMITE_LARGE]))
                         else if ( equali(szKey, "SETTING_DYNAMITE_LOAD") )
                             parseSetting(DTYPE_INT, szValue, charsmax(szValue), g_eSettings[SETTING_DYNAMITE_LOAD], charsmax(g_eSettings[SETTING_DYNAMITE_LOAD]))
-                        else if ( equali(szKey, "SETTING_DYNAMITE_CHECK") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_DYNAMITE_CHECK], charsmax(g_eSettings[SETTING_DYNAMITE_CHECK]))
                         else if ( equali(szKey, "SETTING_DYNAMITE_TASK") )
                             parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_DYNAMITE_TASK], charsmax(g_eSettings[SETTING_DYNAMITE_TASK]))
-                        else if ( equali(szKey, "SETTING_OFFSET_BASE") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET_BASE], charsmax(g_eSettings[SETTING_OFFSET_BASE]))
-                        else if ( equali(szKey, "SETTING_OFFSET") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET], charsmax(g_eSettings[SETTING_OFFSET]))
-                        else if ( equali(szKey, "SETTING_OFFSET_STEP") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET_STEP], charsmax(g_eSettings[SETTING_OFFSET_STEP]))
-                        else if ( equali(szKey, "SETTING_GHOST_ALPHA") )
-                            parseSetting(DTYPE_INT, szValue, charsmax(szValue), g_eSettings[SETTING_GHOST_ALPHA], charsmax(g_eSettings[SETTING_GHOST_ALPHA]))
-                        else if ( equali(szKey, "SETTING_ROTATION_STEP") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_ROTATION_STEP], charsmax(g_eSettings[SETTING_ROTATION_STEP]))
                     }
                     case SECTION_DYNAMITE:
                     {
@@ -1291,7 +1280,7 @@ public menuHandlerRotateTrigger(id, menu, item)
         case ROTATE_TRIGGER_UP:
         {
             pev(eDynamite[DYNAMITE_ID_TRIGGER], pev_angles, eDynamite[DYNAMITE_ANGLES_TRIGGER])
-            eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= g_eSettings[SETTING_ROTATION_STEP]
+            eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= DYNAMITE_ROTATION_STEP
             if ( eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] < -180.0 ) eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] += 360.0
 
             set_pev(eDynamite[DYNAMITE_ID_TRIGGER], pev_angles, eDynamite[DYNAMITE_ANGLES_TRIGGER])
@@ -1303,7 +1292,7 @@ public menuHandlerRotateTrigger(id, menu, item)
         case ROTATE_TRIGGER_DOWN:
         {
             pev(eDynamite[DYNAMITE_ID_TRIGGER], pev_angles, eDynamite[DYNAMITE_ANGLES_TRIGGER])
-            eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] += g_eSettings[SETTING_ROTATION_STEP]
+            eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] += DYNAMITE_ROTATION_STEP
             if ( eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] > 180.0 ) eDynamite[DYNAMITE_ANGLES_TRIGGER][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= 360.0
 
             set_pev(eDynamite[DYNAMITE_ID_TRIGGER], pev_angles, eDynamite[DYNAMITE_ANGLES_TRIGGER])
@@ -1411,7 +1400,7 @@ public menuHandlerRotateDynamite(id, menu, item)
         case ROTATE_DYNAMITE_UP:
         {
             pev(eDynamite[DYNAMITE_LAST_ID], pev_angles, eDynamite[DYNAMITE_LAST_ANGLES])
-            eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= g_eSettings[SETTING_ROTATION_STEP]
+            eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= DYNAMITE_ROTATION_STEP
             if ( eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] < -180.0 ) eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] += 360.0
 
             set_pev(eDynamite[DYNAMITE_LAST_ID], pev_angles, eDynamite[DYNAMITE_LAST_ANGLES])
@@ -1424,7 +1413,7 @@ public menuHandlerRotateDynamite(id, menu, item)
         case ROTATE_DYNAMITE_DOWN:
         {
             pev(eDynamite[DYNAMITE_LAST_ID], pev_angles, eDynamite[DYNAMITE_LAST_ANGLES])
-            eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] += g_eSettings[SETTING_ROTATION_STEP]
+            eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] += DYNAMITE_ROTATION_STEP
             if ( eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] > 180.0 ) eDynamite[DYNAMITE_LAST_ANGLES][g_ePlayerData[id][PDATA_ROTATE_MODE]] -= 360.0
 
             set_pev(eDynamite[DYNAMITE_LAST_ID], pev_angles, eDynamite[DYNAMITE_LAST_ANGLES])
@@ -1575,7 +1564,7 @@ stock dynamiteCreate(id, iItem)
         EnableAction(id)
         g_ePlayerData[id][PDATA_DYNAMITE_GHOST] = eDynamite[DYNAMITE_ID_TRIGGER]
         g_ePlayerData[id][PDATA_ROTATE_MODE] = ROTATE_MODE_YAW
-        g_ePlayerData[id][PDATA_OFFSET] = g_eSettings[SETTING_OFFSET_BASE]
+        g_ePlayerData[id][PDATA_OFFSET] = DYNAMITE_OFFSET_BASE
 
         eDynamite[DYNAMITE_FLAGS] |= FLAG_GHOST
         eDynamite[DYNAMITE_LAST_SIZE] = g_ePlayerData[id][PDATA_ROTATE_SIZE]
@@ -1927,14 +1916,14 @@ public fwdPreThink(id)
             {
                 if ( iButton & IN_ATTACK )
                 {
-                    g_ePlayerData[id][PDATA_OFFSET]      += g_eSettings[SETTING_OFFSET_STEP]
-                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], g_eSettings[SETTING_OFFSET][0], g_eSettings[SETTING_OFFSET][1])
+                    g_ePlayerData[id][PDATA_OFFSET]      += DYNAMITE_OFFSET_STEP
+                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], DYNAMITE_OFFSET_MIN, DYNAMITE_OFFSET_MAX)
                     g_ePlayerData[id][PDATA_NEXT_OFFSET] = fCurrentTime + 0.1
                 }
                 else if ( iButton & IN_ATTACK2 )
                 {
-                    g_ePlayerData[id][PDATA_OFFSET]      -= g_eSettings[SETTING_OFFSET_STEP]
-                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], g_eSettings[SETTING_OFFSET][0], g_eSettings[SETTING_OFFSET][1])
+                    g_ePlayerData[id][PDATA_OFFSET]      -= DYNAMITE_OFFSET_STEP
+                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], DYNAMITE_OFFSET_MIN, DYNAMITE_OFFSET_MAX)
                     g_ePlayerData[id][PDATA_NEXT_OFFSET] = fCurrentTime + 0.1
                 }
             }
@@ -2019,7 +2008,7 @@ stock dynamiteCheck(id)
     global_get(glb_v_forward, fVec2)
 
     iBest = -1
-    fBestDist = g_eSettings[SETTING_DYNAMITE_CHECK]
+    fBestDist = DYNAMITE_CHECK
 
     for ( new i = 0; i < g_iDynamite; i ++ )
     {
@@ -2338,11 +2327,11 @@ stock dynamiteSelect(eDynamite[DYNAMITE], iAction, bool:bDynamiteExists = true)
     }
     else if ( iAction == TARGET_GHOST )
     {
-        set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, g_eSettings[SETTING_GHOST_ALPHA])
+        set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
 
         if ( bDynamiteExists )
             for ( new i = 0; i < eDynamite[DYNAMITE_ID_COUNT]; i ++ )
-                set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, g_eSettings[SETTING_GHOST_ALPHA])
+                set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
     }
     else if ( iAction == TARGET_HIDE )
     {
@@ -2559,3 +2548,8 @@ stock LogConfigError(const iLine, const szText[], any:...)
 
     log_to_file(ERROR_FILE, "^nLine %d: %s", iLine, szError)
 }
+
+
+
+
+
