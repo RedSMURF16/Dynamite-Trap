@@ -21,9 +21,7 @@
 #include <amxmodx>
 #include <amxmisc>
 #include <cstrike>
-#include <engine>
 #include <fakemeta>
-#include <fun>
 #include <hamsandwich>
 #include <xs>
 
@@ -193,7 +191,6 @@ enum _:DYNAMITE
     Array:DYNAMITE_SIZE,
     DYNAMITE_ACTIVATOR,
     DYNAMITE_NAME[MAX_VALUE_LENGTH],
-    DYNAMITE_MODEL[MAX_RESOURCE_PATH_LENGTH],
     DYNAMITE_LAST_ID,
     DYNAMITE_LAST_SIZE,
     Float:DYNAMITE_LAST_ORIGIN[3],
@@ -356,8 +353,6 @@ new Array:g_aDynamite,
     g_iDynamite, g_iDynamiteConfig, g_iScreenShake,
     g_iMaxPlayers
 
-new const g_iColorActive[] = { 0, 255, 0 }
-new const g_iColorInactive[] = { 255, 0, 0 }
 new g_szRotateMode[][] = {"DYNAMITE_ROTATE_PITCH", "DYNAMITE_ROTATE_YAW", "DYNAMITE_ROTATE_ROLL"}
 new g_szRotateSize[][] = {"DYNAMITE_ROTATE_SMALL", "DYNAMITE_ROTATE_MEDIUM", "DYNAMITE_ROTATE_LARGE"}
 
@@ -604,9 +599,7 @@ ReadFile()
                     }
                     case SECTION_DYNAMITE:
                     {
-                        if ( equali(szKey, "DYNAMITE_MODEL") )
-                            parseSetting(DTYPE_STRING_MODEL, szValue, charsmax(szValue), eDynamite[DYNAMITE_MODEL], charsmax(eDynamite[DYNAMITE_MODEL]))
-                        else if ( equali(szKey, "DYNAMITE_SPRITE_EXPLOSION") )
+                        if ( equali(szKey, "DYNAMITE_SPRITE_EXPLOSION") )
                             parseSetting(DTYPE_STRING_MODEL_ID, szValue, charsmax(szValue), eDynamite[DYNAMITE_SPRITE_EXPLOSION], charsmax(eDynamite[DYNAMITE_SPRITE_EXPLOSION]))
                         else if ( equali(szKey, "DYNAMITE_FLAGS") )
                             parseSetting(DTYPE_FLAGS, szValue, charsmax(szValue), eDynamite[DYNAMITE_FLAGS], charsmax(eDynamite[DYNAMITE_FLAGS]))
@@ -749,10 +742,10 @@ public menuRoot(id, iMenu)
 
     menu_addblank2(iMenu)
 
-    formatex(szItem, charsmax(szItem), "%L", id, "DYNAMITE_ROOT_NOCLIP", id, get_user_noclip(id) ? "DYNAMITE_ON" : "DYNAMITE_OFF")
+    formatex(szItem, charsmax(szItem), "%L", id, "DYNAMITE_ROOT_NOCLIP", id, (pev(id, pev_movetype) == MOVETYPE_NOCLIP) ? "DYNAMITE_ON" : "DYNAMITE_OFF")
     menu_additem(iMenu, szItem)
 
-    formatex(szItem, charsmax(szItem), "%L", id, "DYNAMITE_ROOT_GODMODE", id, get_user_godmode(id) ? "DYNAMITE_ON" : "DYNAMITE_OFF")
+    formatex(szItem, charsmax(szItem), "%L", id, "DYNAMITE_ROOT_GODMODE", id, (pev(id, pev_takedamage) == DAMAGE_NO) ? "DYNAMITE_ON" : "DYNAMITE_OFF")
     menu_additem(iMenu, szItem)
 }
 
@@ -1850,7 +1843,7 @@ stock LoadDataDynamite(iItem, iFlags, Float:fOriginTrigger[3], Float:fAnglesTrig
 
 public dynamiteNoClip(id)
 {
-    set_user_noclip(id, !get_user_noclip(id))
+    set_pev(id, pev_movetype, pev(id, pev_movetype) == MOVETYPE_NOCLIP ? MOVETYPE_WALK : MOVETYPE_NOCLIP)
 
     dynamiteSound(id, SOUND_MENU_NAV)
     dynamiteMenu(id, MENU_ROOT)
@@ -1858,7 +1851,7 @@ public dynamiteNoClip(id)
 
 public dynamiteGodMode(id)
 {
-    set_user_godmode(id, !get_user_godmode(id))
+    set_pev(id, pev_takedamage, pev(id, pev_takedamage) == DAMAGE_NO ? DAMAGE_AIM : DAMAGE_NO)
 
     dynamiteSound(id, SOUND_MENU_NAV)
     dynamiteMenu(id, MENU_ROOT)
@@ -2320,35 +2313,35 @@ stock dynamiteSelect(eDynamite[DYNAMITE], iAction, bool:bDynamiteExists = true)
 
     if ( iAction == TARGET_SELECT )
     {
-        if ( eDynamite[DYNAMITE_FLAGS] & FLAG_ACTIVE )  { iRenderColor[0] = g_iColorActive[0];    iRenderColor[1] = g_iColorActive[1];    iRenderColor[2] = g_iColorActive[2]; }
-        else                                            { iRenderColor[0] = g_iColorInactive[0];  iRenderColor[1] = g_iColorInactive[1];  iRenderColor[2] = g_iColorInactive[2]; }
+        if ( eDynamite[DYNAMITE_FLAGS] & FLAG_ACTIVE )  { iRenderColor[0] = 0;    iRenderColor[1] = 255;    iRenderColor[2] = 0; }
+        else                                            { iRenderColor[0] = 255;  iRenderColor[1] = 0;  iRenderColor[2] = 0; }
 
-        set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
+        entitySetRendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
         for ( new i = 0; i < eDynamite[DYNAMITE_ID_COUNT]; i ++ )
-            set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
+            entitySetRendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
     }
     else if ( iAction == TARGET_GHOST )
     {
-        set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
+        entitySetRendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
 
         if ( bDynamiteExists )
             for ( new i = 0; i < eDynamite[DYNAMITE_ID_COUNT]; i ++ )
-                set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
+                entitySetRendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, DYNAMITE_GHOST_ALPHA)
     }
     else if ( iAction == TARGET_HIDE )
     {
         if ( !(eDynamite[DYNAMITE_FLAGS] & FLAG_EXPLODE) )
-            set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
+            entitySetRendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
 
         for ( new i = 0; i < eDynamite[DYNAMITE_ID_COUNT]; i ++ )
-            set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
+            entitySetRendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
     }
     else if ( iAction == TARGET_CLEAR )
     {
-        set_ent_rendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
+        entitySetRendering(eDynamite[DYNAMITE_ID_TRIGGER], kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
         if ( bDynamiteExists )
             for ( new i = 0; i < eDynamite[DYNAMITE_ID_COUNT]; i ++ )
-                set_ent_rendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
+                entitySetRendering(ArrayGetCell(eDynamite[DYNAMITE_ID_DYNAMITE], i), kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
     }
 }
 
@@ -2562,8 +2555,15 @@ stock LogConfigError(const iLine, const szText[], any:...)
 
     log_to_file(ERROR_FILE, "^nLine %d: %s", iLine, szError)
 }
+stock entitySetRendering(iEntity, iRenderFx, iRed, iGreen, iBlue, iRenderMode, iRenderAmt)
+{
+    new Float:fRenderColor[3]
+    fRenderColor[0] = float(iRed)
+    fRenderColor[1] = float(iGreen)
+    fRenderColor[2] = float(iBlue)
 
-
-
-
-
+    set_pev(iEntity, pev_renderfx, iRenderFx)
+    set_pev(iEntity, pev_rendercolor, fRenderColor)
+    set_pev(iEntity, pev_rendermode, iRenderMode)
+    set_pev(iEntity, pev_renderamt, float(iRenderAmt))
+}
