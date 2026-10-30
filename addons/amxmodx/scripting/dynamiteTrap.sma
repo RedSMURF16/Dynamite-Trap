@@ -20,7 +20,6 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <cstrike>
 #include <fakemeta>
 #include <hamsandwich>
 #include <xs>
@@ -1542,7 +1541,7 @@ public dynamiteTask()
 
 stock dynamiteCreate(id, iItem)
 {
-    new iEnt = cs_create_entity("info_target")
+    new iEnt = engfunc(EngFunc_CreateNamedEntity, engfunc(EngFunc_AllocString, "info_target"))
     if ( !pev_valid(iEnt) )
         return
 
@@ -1585,7 +1584,7 @@ stock dynamiteCreate(id, iItem)
 
 stock dynamiteCreateDynamite(eDynamite[DYNAMITE])
 {
-    new iEnt = cs_create_entity("info_target")
+    new iEnt = engfunc(EngFunc_CreateNamedEntity, engfunc(EngFunc_AllocString, "info_target"))
     if ( !pev_valid(iEnt) )
         return
 
@@ -1869,7 +1868,7 @@ public fwdUse(iEnt, iCaller, iActivator, iType, Float:fValue)
 
     if ( !(eDynamite[DYNAMITE_FLAGS] & FLAG_ACTIVE)
     || eDynamite[DYNAMITE_FLAGS] & FLAG_TRIGGER
-    || !(CsTeams:eDynamite[DYNAMITE_TEAM] & cs_get_user_team(iActivator))
+    || !(eDynamite[DYNAMITE_TEAM] & get_user_team(iActivator))
     || get_gametime() < eDynamite[DYNAMITE_NEXT_ACTIVE] )
         return HAM_IGNORED
 
@@ -2126,7 +2125,7 @@ stock dynamiteExplode(eDynamite[DYNAMITE])
         {
             if ( !pev_valid(iEnt)
             || pev(iEnt, pev_takedamage) == DAMAGE_NO
-            || (is_user_alive(iEnt) && !(cs_get_user_team(iEnt) & CsTeams:eDynamite[DYNAMITE_EXPLOSION_TEAM])) )
+            || (is_user_alive(iEnt) && !(get_user_team(iEnt) & eDynamite[DYNAMITE_EXPLOSION_TEAM])) )
                 continue
 
             pev(iEnt, pev_absmin, fVec1)
