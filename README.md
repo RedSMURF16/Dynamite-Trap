@@ -18,6 +18,10 @@ Dynamite Traps can be placed, managed and configured during gameplay with runtim
 - Dynamic Dynamite Trap rotation and natural ghost preview placement
 - Custom Dynamite Trap setups are saved per map and automatically loaded on every map start
 
+## 📋 Requirements
+- ReGameDLL
+- AMX Mod X 1.10+
+
 ## 💬 Commands
 - `say /dt` - Opens the Dynamite Trap menu.
 - `say_team /dt` - Opens the Dynamite Trap menu.
