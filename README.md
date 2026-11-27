@@ -1,7 +1,7 @@
 <h1 align="center">Dynamite Trap</h1>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=UiypPR_ifN8"><img src="https://img.youtube.com/vi/UiypPR_ifN8/maxresdefault.jpg" alt="Watch on YouTube" width="600"></a>
+  <img src="images/demo.gif" alt="Dynamite Trap">
 </p>
 
 ## 📝 Description
